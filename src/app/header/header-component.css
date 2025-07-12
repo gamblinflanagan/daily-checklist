@@ -1,0 +1,31 @@
+ .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 40px 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .title-icon {
+      font-size: 2rem;
+      color: #4f46e5;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: #64748b;
+      margin: 0;
+      font-weight: 500;
+    }

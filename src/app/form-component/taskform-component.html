@@ -1,0 +1,32 @@
+<div class="add-task-section">
+    <h2 class="section-title">Add a new task</h2>
+    <div class="task-form">
+        <div class="form-group">
+        <label for="task-title" class="form-label">Task Title</label>
+        <input 
+            id="task-title"
+            type="text" 
+            [(ngModel)]="newTaskTitle" 
+            placeholder="Enter task title..."
+            class="task-input"
+        />
+        </div>
+        <div class="form-group">
+        <label for="task-description" class="form-label">Description</label>
+        <textarea 
+            id="task-description"
+            [(ngModel)]="newTaskDescription" 
+            placeholder="Enter task description..."
+            class="task-textarea"
+            rows="3"
+        ></textarea>
+        </div>
+        <button 
+        (click)="addTask()" 
+        [disabled]="!newTaskTitle.trim()"
+        class="add-button"
+        >
+        Add Task
+        </button>
+    </div>
+</div>

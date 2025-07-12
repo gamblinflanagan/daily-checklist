@@ -1,0 +1,144 @@
+      <!-- <div class="header">
+        <h1 class="title">
+          <span class="title-icon">✓</span>
+          DAILY CHECKLIST
+        </h1>
+        <p class="subtitle">Organize and manage your daily tasks</p>
+      </div> -->
+
+      <!-- <div class="add-task-section">
+        <h2 class="section-title">Add a new task</h2>
+        <div class="task-form">
+          <div class="form-group">
+            <label for="task-title" class="form-label">Task Title</label>
+            <input 
+              id="task-title"
+              type="text" 
+              [(ngModel)]="newTaskTitle" 
+              placeholder="Enter task title..."
+              class="task-input"
+            />
+          </div>
+          <div class="form-group">
+            <label for="task-description" class="form-label">Description</label>
+            <textarea 
+              id="task-description"
+              [(ngModel)]="newTaskDescription" 
+              placeholder="Enter task description..."
+              class="task-textarea"
+              rows="3"
+            ></textarea>
+          </div>
+          <button 
+            (click)="addTask()" 
+            [disabled]="!newTaskTitle.trim()"
+            class="add-button"
+          >
+            Add Task
+          </button>
+        </div>
+      </div> -->
+
+      <div class="tasks-section" *ngIf="tasks.length > 0">
+        <div class="section-header">
+          <h2 class="section-title">Your Tasks</h2>
+          <div class="task-stats">
+            <span class="stat">Total: {{tasks.length}}</span>
+            <span class="stat">Completed: {{getCompletedCount()}}</span>
+          </div>
+        </div>
+
+        <div class="tasks-card">
+          <div class="tasks-list">
+            <div 
+              *ngFor="let task of tasks; trackBy: trackByTaskId" 
+              class="task-item"
+              [class.completed]="task.completed"
+            >
+              <div class="task-content" *ngIf="!task.editing">
+                <div class="task-left-column">
+                  <!-- <input 
+                    type="checkbox" 
+                    [(ngModel)]="task.completed"
+                    class="task-checkbox"
+                    [id]="'task-' + task.id"
+                  /> -->
+                  <mat-checkbox class="example-margin" [(ngModel)]="task.completed"></mat-checkbox>
+                  <div class="task-actions">
+                    <button 
+                      (click)="editTask(task)" 
+                      class="action-button edit-button"
+                      title="Edit task"
+                    >
+                      <span class="icon"><ng-icon name="heroPencil" /></span>
+                    </button>
+                    <button 
+                      (click)="deleteTask(task.id)" 
+                      class="action-button delete-button"
+                      title="Delete task"
+                    >
+                      <span class="icon"><ng-icon name="heroTrash" /></span>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="task-content-area">
+                  <h3 
+                    class="task-title"
+                    [class.strikethrough]="task.completed"
+                  >
+                    {{task.title}}
+                  </h3>
+                  <p 
+                    class="task-description"
+                    [class.strikethrough]="task.completed"
+                    *ngIf="task.description"
+                  >
+                    {{task.description}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="task-content" *ngIf="task.editing">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="task.completed"
+                  class="task-checkbox"
+                  [id]="'task-' + task.id"
+                />
+                
+                <div class="task-edit-form">
+                  <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input 
+                      type="text" 
+                      [(ngModel)]="task.title"
+                      class="task-edit-input"
+                      placeholder="Task title..."
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea 
+                      [(ngModel)]="task.description"
+                      class="task-edit-textarea"
+                      rows="2"
+                      placeholder="Task description..."
+                    ></textarea>
+                  </div>
+                  <div class="edit-buttons">
+                    <button (click)="saveTask(task)" class="save-button">Save</button>
+                    <button (click)="cancelEdit(task)" class="cancel-button">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="tasks.length === 0">
+        <div class="empty-icon">📝</div>
+        <h3 class="empty-title">No tasks yet</h3>
+        <p class="empty-message">Add your first task to get started with your daily checklist!</p>
+      </div>
