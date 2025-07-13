@@ -34,13 +34,6 @@ export class TaskListComponent {
 
   saveTask(taskId: number) {
     this.taskListService.saveTask(taskId);
-    // if (task.title.trim()) {
-    //   task.editing = false;
-    // } else {
-    //   task.title = this.originalTask.title || '';
-    //   task.description = this.originalTask.description || '';
-    //   task.editing = false;
-    // }
   }
 
   cancelEdit(taskId: number) {

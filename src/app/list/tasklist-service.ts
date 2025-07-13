@@ -51,15 +51,6 @@ export class TaskListService {
         currentTask.originalVals[1] = currentTask.description ;
         currentTask.editing = !currentTask.editing; 
     }
-    // if (typeof(currentTask) !== 'undefined') {  
-    //     if (currentTask.title.trim()) {
-    //         currentTask.editing = false;
-    //     } else {
-    //         currentTask.title = this.originalTask.title || '';
-    //         currentTask.description = this.originalTask.description || '';
-    //         currentTask.editing = false;
-    //     }
-    // }
   }
 
   cancelEdit(taskId: number) {
@@ -72,7 +63,6 @@ export class TaskListService {
   }
 
   deleteTask(taskId: number) {
-    //const taskId = this.tasks[index].id;
     if (confirm('Are you sure you want to delete this task?')) {
       this.tasks = this.tasks.filter(task => task.id !== taskId);
     }
