@@ -23,7 +23,7 @@
                     class="task-checkbox"
                     [id]="'task-' + task.id"
                   /> -->
-                  <mat-checkbox class="example-margin" [(ngModel)]="task.completed"></mat-checkbox>
+                  <mat-checkbox class="example-margin" [checked]="task.completed" (change)="toggleTaskComplete(task.id)"></mat-checkbox>
                   <div class="task-actions">
                     <button 
                       *ngIf="!task.completed"

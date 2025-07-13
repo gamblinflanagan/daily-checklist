@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, OnInit, DestroyRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+// import { HttpClient } from '@angular/common/http';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 // import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers, heroTrash, heroPencil } from '@ng-icons/heroicons/outline';
+
 import type { Task } from '../form-component/taskform-component';
 import { TaskListService } from './tasklist-service';
 
@@ -16,16 +18,39 @@ import { TaskListService } from './tasklist-service';
   templateUrl: './tasklist-component.html',
   styleUrl: './tasklist-component.css'
 })
-export class TaskListComponent {
-  constructor(private taskListService: TaskListService) {}
-  private originalTask: Partial<Task> = {};
+export class TaskListComponent implements OnInit {
+  // private originalTask: Partial<Task> = {};
+  // constructor(private taskListService: TaskListService) {}
+  private taskListService = inject(TaskListService);
+  // private httpClient = inject(HttpClient);
+  // private destroyRef = inject(DestroyRef);
+  // isFetching = signal(false);
+
+  ngOnInit(): void {
+    this.taskListService.getTasksFromServer();
+    // this.isFetching.set(true);
+    // const subscription = this.httpClient.get('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks.json').subscribe({
+    //   next: (responseData) => {
+    //     //console.log(responseData);
+    //     this.taskListService.setAllTasks(responseData);
+    //   },
+    //   complete: () => {
+    //     this.isFetching.set(false);
+    //   }
+    // });
+
+    // this.destroyRef.onDestroy(() => {
+    //   subscription.unsubscribe();
+    // });
+  }
+  
 
   get allTasks() {
     return this.taskListService.getAllTasks();
   }
 
-  toggleTask(task: Task) {
-    task.completed = !task.completed;
+  toggleTaskComplete(taskId: number) {
+    this.taskListService.toggleTaskComplete(taskId);
   }
 
   editTask(taskId: number) {
