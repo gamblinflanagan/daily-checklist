@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import type { Task } from '../form-component/taskform-component';
 
 @Injectable({ providedIn: 'root' })
@@ -6,21 +7,24 @@ export class TaskListService {
     private tasks= [
         {
             id: 1,
-            title: 'task title',
-            description: 'task description',
+            title: '9pm stream',
+            description: 'make sure to watch stream at 9pm tonight',
             completed: false,
             editing: false,
-            originalVals: ['task title', 'task description']
+            originalVals: ['9pm stream', 'make sure to watch stream at 9pm tonight']
         }
-    ]
+    ];
 
-    constructor() {
-    const tasks: Task[] = [];//localStorage.getItem('tasks');
+    constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+        //const tasks: Task[] = [];//
+        if (isPlatformBrowser(this.platformId)) {
+            const tasks = localStorage.getItem('tasks');// || [];
 
-    // if (tasks) {
-    //   this.tasks = JSON.parse(tasks);
-    // }
-  }
+            if (tasks) {
+            this.tasks = JSON.parse(tasks);
+            }
+        }
+    }
 
   getAllTasks() {
     return this.tasks;
@@ -28,6 +32,7 @@ export class TaskListService {
 
   addTask(newTask: Task) {
     this.tasks.push(newTask);
+    this.saveInStorage();
   }
 
 //   searchTasks(userId: string) {
@@ -36,7 +41,10 @@ export class TaskListService {
 
  toggleTask(taskId: number) {
     const currentTask = this.tasks.find((task) => task.id === taskId);
-    if (typeof(currentTask) !== 'undefined') { currentTask.completed = !currentTask.completed; }
+    if (typeof(currentTask) !== 'undefined') { 
+        currentTask.completed = !currentTask.completed; 
+        this.saveInStorage();
+    }
   }
 
   toggleEdit(taskId: number) {
@@ -49,7 +57,8 @@ export class TaskListService {
     if (typeof(currentTask) !== 'undefined') { 
         currentTask.originalVals[0] = currentTask.title ;
         currentTask.originalVals[1] = currentTask.description ;
-        currentTask.editing = !currentTask.editing; 
+        currentTask.editing = !currentTask.editing;
+         this.saveInStorage();
     }
   }
 
@@ -65,15 +74,20 @@ export class TaskListService {
   deleteTask(taskId: number) {
     if (confirm('Are you sure you want to delete this task?')) {
       this.tasks = this.tasks.filter(task => task.id !== taskId);
+      this.saveInStorage();
     }
   }
 
-  getCompletedCount(): number {
-    return this.tasks.filter(task => task.completed).length;
+  private saveInStorage() {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 
-  trackByTaskId(index: number, task: Task): number {
-    return task.id;
-  }
+//   getCompletedCount(): number {
+//     return this.tasks.filter(task => task.completed).length;
+//   }
+
+//   trackByTaskId(index: number, task: Task): number {
+//     return task.id;
+//   }
 
 }
