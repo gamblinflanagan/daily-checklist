@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -6,6 +6,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 // import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers, heroTrash, heroPencil } from '@ng-icons/heroicons/outline';
 import type { Task } from '../form-component/taskform-component';
+import { TaskListService } from './tasklist-service';
 
 // interface Task {
 //   id: number;
@@ -23,37 +24,23 @@ import type { Task } from '../form-component/taskform-component';
   styleUrl: './tasklist-component.css'
 })
 export class TaskListComponent {
-  tasks: Task[] = [];
-  // newTaskTitle = '';
-  // newTaskDescription = '';
-  // private nextId = 1;
+  constructor(private taskListService: TaskListService) {}
   private originalTask: Partial<Task> = {};
 
-  // addTask() {
-  //   if (this.newTaskTitle.trim()) {
-  //     const newTask: Task = {
-  //       id: this.nextId++,
-  //       title: this.newTaskTitle.trim(),
-  //       description: this.newTaskDescription.trim(),
-  //       completed: false,
-  //       editing: false
-  //     };
-  //     this.tasks.push(newTask);
-  //     this.newTaskTitle = '';
-  //     this.newTaskDescription = '';
-  //   }
-  // }
+  get allTasks() {
+    return this.taskListService.getAllTasks();
+  }
 
   toggleTask(task: Task) {
     task.completed = !task.completed;
   }
 
-  editTask(task: Task) {
-    this.originalTask = {
-      title: task.title,
-      description: task.description
-    };
-    task.editing = true;
+  editTask(taskId: number) {
+    // this.originalTask = {
+    //   title: task.title,
+    //   description: task.description
+    // };
+    // task.editing = true;
   }
 
   saveTask(task: Task) {
@@ -73,14 +60,12 @@ export class TaskListComponent {
   }
 
   deleteTask(taskId: number) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.tasks = this.tasks.filter(task => task.id !== taskId);
-    }
+    this.taskListService.deleteTask(taskId);
   }
 
-  getCompletedCount(): number {
-    return this.tasks.filter(task => task.completed).length;
-  }
+  // getCompletedCount(): number {
+  //   return this.tasks.filter(task => task.completed).length;
+  // }
 
   trackByTaskId(index: number, task: Task): number {
     return task.id;

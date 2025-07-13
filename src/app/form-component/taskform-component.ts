@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TaskListService } from '../list/tasklist-service';
 
 export type Task = {
   id: number;
@@ -17,12 +18,13 @@ export type Task = {
   styleUrl: './taskform-component.css'
 })
 export class TaskFormComponent {
+  private taskListService = inject(TaskListService);
   newTaskTitle = '';
   newTaskDescription = '';
-  private nextId = 1;
-  private originalTask: Partial<Task> = {};
+  private nextId = 2;
+  // private originalTask: Partial<Task> = {};
 
-  addTask() {
+  onAdd() {
     if (this.newTaskTitle.trim()) {
       const newTask: Task = {
         id: this.nextId++,
@@ -31,7 +33,7 @@ export class TaskFormComponent {
         completed: false,
         editing: false
       };
-      //this.tasks.push(newTask);
+      this.taskListService.addTask(newTask);
       this.newTaskTitle = '';
       this.newTaskDescription = '';
     }
