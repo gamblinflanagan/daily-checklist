@@ -8,13 +8,6 @@ import { heroUsers, heroTrash, heroPencil } from '@ng-icons/heroicons/outline';
 import type { Task } from '../form-component/taskform-component';
 import { TaskListService } from './tasklist-service';
 
-// interface Task {
-//   id: number;
-//   title: string;
-//   description: string;
-//   completed: boolean;
-//   editing: boolean;
-// }
 
 @Component({
   selector: 'task-list',
@@ -36,27 +29,22 @@ export class TaskListComponent {
   }
 
   editTask(taskId: number) {
-    // this.originalTask = {
-    //   title: task.title,
-    //   description: task.description
-    // };
-    // task.editing = true;
+    this.taskListService.toggleEdit(taskId);
   }
 
-  saveTask(task: Task) {
-    if (task.title.trim()) {
-      task.editing = false;
-    } else {
-      task.title = this.originalTask.title || '';
-      task.description = this.originalTask.description || '';
-      task.editing = false;
-    }
+  saveTask(taskId: number) {
+    this.taskListService.saveTask(taskId);
+    // if (task.title.trim()) {
+    //   task.editing = false;
+    // } else {
+    //   task.title = this.originalTask.title || '';
+    //   task.description = this.originalTask.description || '';
+    //   task.editing = false;
+    // }
   }
 
-  cancelEdit(task: Task) {
-    task.title = this.originalTask.title || '';
-    task.description = this.originalTask.description || '';
-    task.editing = false;
+  cancelEdit(taskId: number) {
+    this.taskListService.cancelEdit(taskId);
   }
 
   deleteTask(taskId: number) {
@@ -67,7 +55,7 @@ export class TaskListComponent {
   //   return this.tasks.filter(task => task.completed).length;
   // }
 
-  trackByTaskId(index: number, task: Task): number {
-    return task.id;
-  }
+  // trackByTaskId(index: number, task: Task): number {
+  //   return task.id;
+  // }
 }

@@ -9,6 +9,8 @@ export class TaskListService {
             title: 'task title',
             description: 'task description',
             completed: false,
+            editing: false,
+            originalVals: ['task title', 'task description']
         }
     ]
 
@@ -25,51 +27,49 @@ export class TaskListService {
   }
 
   addTask(newTask: Task) {
-    // if (this.newTaskTitle.trim()) {
-    //   const newTask: Task = {
-    //     id: this.nextId++,
-    //     title: this.newTaskTitle.trim(),
-    //     description: this.newTaskDescription.trim(),
-    //     completed: false,
-    //     editing: false
-    //   };
-      this.tasks.push(newTask);
-    //   this.newTaskTitle = '';
-    //   this.newTaskDescription = '';
-    //}
+    this.tasks.push(newTask);
   }
 
-//   getUserTasks(userId: string) {
+//   searchTasks(userId: string) {
 //     return this.tasks.filter((task) => task.id === id);
 //   }
 
- toggleTask(index: number) {
-    this.tasks[index].completed = !this.tasks[index].completed;
+ toggleTask(taskId: number) {
+    const currentTask = this.tasks.find((task) => task.id === taskId);
+    if (typeof(currentTask) !== 'undefined') { currentTask.completed = !currentTask.completed; }
   }
 
-//   editTask(task: Task) {
-//     this.originalTask = {
-//       title: task.title,
-//       description: task.description
-//     };
-//     task.editing = true;
-//   }
+  toggleEdit(taskId: number) {
+    const currentTask = this.tasks.find((task) => task.id === taskId);
+    if (typeof(currentTask) !== 'undefined') { currentTask.editing = !currentTask.editing; }
+  }
 
-//   saveTask(task: Task) {
-//     if (task.title.trim()) {
-//       task.editing = false;
-//     } else {
-//       task.title = this.originalTask.title || '';
-//       task.description = this.originalTask.description || '';
-//       task.editing = false;
-//     }
-//   }
+  saveTask(taskId: number) {
+    const currentTask = this.tasks.find((task) => task.id === taskId);
+    if (typeof(currentTask) !== 'undefined') { 
+        currentTask.originalVals[0] = currentTask.title ;
+        currentTask.originalVals[1] = currentTask.description ;
+        currentTask.editing = !currentTask.editing; 
+    }
+    // if (typeof(currentTask) !== 'undefined') {  
+    //     if (currentTask.title.trim()) {
+    //         currentTask.editing = false;
+    //     } else {
+    //         currentTask.title = this.originalTask.title || '';
+    //         currentTask.description = this.originalTask.description || '';
+    //         currentTask.editing = false;
+    //     }
+    // }
+  }
 
-//   cancelEdit(task: Task) {
-//     task.title = this.originalTask.title || '';
-//     task.description = this.originalTask.description || '';
-//     task.editing = false;
-//   }
+  cancelEdit(taskId: number) {
+    const currentTask = this.tasks.find((task) => task.id === taskId);
+    if (typeof(currentTask) !== 'undefined') { 
+        currentTask.title  = currentTask.originalVals[0];
+        currentTask.description = currentTask.originalVals[1];
+        currentTask.editing = !currentTask.editing; 
+    }
+  }
 
   deleteTask(taskId: number) {
     //const taskId = this.tasks[index].id;

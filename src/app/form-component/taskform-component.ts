@@ -9,6 +9,7 @@ export type Task = {
   description: string;
   completed: boolean;
   editing: boolean;
+  originalVals: string[];
 }
 
 @Component({
@@ -22,7 +23,6 @@ export class TaskFormComponent {
   newTaskTitle = '';
   newTaskDescription = '';
   private nextId = 2;
-  // private originalTask: Partial<Task> = {};
 
   onAdd() {
     if (this.newTaskTitle.trim()) {
@@ -31,7 +31,8 @@ export class TaskFormComponent {
         title: this.newTaskTitle.trim(),
         description: this.newTaskDescription.trim(),
         completed: false,
-        editing: false
+        editing: false,
+        originalVals: [this.newTaskTitle.trim(), this.newTaskDescription.trim()]
       };
       this.taskListService.addTask(newTask);
       this.newTaskTitle = '';
