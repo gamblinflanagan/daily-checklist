@@ -11,6 +11,7 @@ export class TaskListService {
     private httpClient = inject(HttpClient);
     private destroyRef = inject(DestroyRef);
     isFetching = signal(false);
+    error = signal('');
 
     private tasks: Task[] = []
     private offlineTasks: Task[] = []
@@ -19,9 +20,13 @@ export class TaskListService {
         //const tasks: Task[] = [];//
         if (isPlatformBrowser(this.platformId)) {
             const tasks = localStorage.getItem('tasks');// || [];
+            const offlineTasks = localStorage.getItem('offlineTasks');
 
             if (tasks) {
                 this.tasks = JSON.parse(tasks);
+            }
+            if (offlineTasks) {
+              this.offlineTasks = JSON.parse(offlineTasks);
             }
         }
     }
@@ -103,6 +108,7 @@ export class TaskListService {
                 
                 });
                 this.offlineTasks.splice(0, this.offlineTasks.length);
+                this.saveInStorage();
                 this.isFetching.set(false);
             }
         }
@@ -119,6 +125,11 @@ export class TaskListService {
         console.log(responseData);
         newTask.dbId = responseData.name || '';
       },
+      error: (error) => {
+        this.error.set(error);
+        newTask.method = 'POST';
+        this.offlineTasks.push(newTask);
+      },
       complete: () => {
         this.tasks.push(newTask);
         this.saveTask(newTask.id)
@@ -130,9 +141,6 @@ export class TaskListService {
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe();
     });
-    //if error just do this
-    // this.tasks.push(newTask);
-    // this.saveInStorage();
   }
 
 
@@ -156,6 +164,11 @@ export class TaskListService {
         const subscription = this.httpClient.put('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+currentTask.dbId+'.json', currentTask).subscribe({
           next: (responseData: any) => {
               console.log(responseData);
+          },
+          error: (error) => {
+            this.error.set(error);
+            currentTask.method = 'PUT';
+            this.offlineTasks.push(currentTask);
           },
           complete: () => {
               this.isFetching.set(false);
@@ -182,6 +195,11 @@ export class TaskListService {
         const subscription = this.httpClient.put('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+currentTask.dbId+'.json', currentTask).subscribe({
         next: (responseData: any) => {
             console.log(responseData);
+        },
+        error: (error) => {
+          this.error.set(error);
+          currentTask.method = 'PUT';
+          this.offlineTasks.push(currentTask);
         },
         complete: () => {
             this.isFetching.set(false);
@@ -213,6 +231,11 @@ export class TaskListService {
               next: (responseData: any) => {
                 console.log(responseData);
               },
+              error: (error) => {
+                this.error.set(error);
+                currentTask.method = 'DELETE';
+                this.offlineTasks.push(currentTask);
+              },
               complete: () => {
                 this.isFetching.set(false);
               }
@@ -228,6 +251,7 @@ export class TaskListService {
 
   private saveInStorage() {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    localStorage.setItem('offlineTasks', JSON.stringify(this.offlineTasks));
   }
 
 //   getCompletedCount(): number {
