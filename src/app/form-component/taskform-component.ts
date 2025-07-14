@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TaskListService } from '../list/tasklist-service';
 
 export type Task = {
-  id: any;
+  id: string;
   title: string;
   description: string;
   completed: boolean;
@@ -27,13 +27,12 @@ export class TaskFormComponent {
   isFetching = signal(false);
   newTaskTitle = '';
   newTaskDescription = '';
-  private nextId = 0;
   dbResponse = '';
 
   onAdd() {
     if (this.newTaskTitle.trim()) {
       const newTask: Task = {
-        id: this.nextId,
+        id: '0',
         title: this.newTaskTitle.trim(),
         description: this.newTaskDescription.trim(),
         completed: false,

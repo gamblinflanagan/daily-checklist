@@ -11,17 +11,17 @@ export class TaskListService {
     private destroyRef = inject(DestroyRef);
     isFetching = signal(false);
 
-    private tasks= [
-        {
-            id: 1,
-            title: '9pm stream',
-            description: 'make sure to watch stream at 9pm tonight',
-            completed: false,
-            editing: false,
-            originalVals: ['9pm stream', 'make sure to watch stream at 9pm tonight'],
-            dbId: ''
-        }
-    ];
+    private tasks: Task[] = []
+    //     {
+    //         id: '1',
+    //         title: '9pm stream',
+    //         description: 'make sure to watch stream at 9pm tonight',
+    //         completed: false,
+    //         editing: false,
+    //         originalVals: ['9pm stream', 'make sure to watch stream at 9pm tonight'],
+    //         dbId: ''
+    //     }
+    // ];
 
     constructor(@Inject(PLATFORM_ID) private platformId: Object) {
         //const tasks: Task[] = [];//
@@ -56,29 +56,32 @@ export class TaskListService {
   }
 
   setAllTasks(tasks: any) {
-    const ids = Object.keys(tasks);
-    let tasksArr: Task[] = Object.values(tasks);
-    // console.log(tasksArr);
-    if (isPlatformBrowser(this.platformId)) {
-         ids.forEach((id, i) => {
-                tasksArr[i].dbId = id;
-            });
-            this.tasks = tasksArr;
-            this.saveInStorage();
-        // if (JSON.stringify(tasksArr) === JSON.stringify(this.tasks)) {
-        //     ids.forEach((id, i) => {
-        //         tasksArr[i].dbId = id;
-        //     });
-        //     this.tasks = tasksArr;
-        //     this.saveInStorage();
-        // }
+    if (typeof(tasks) !== 'undefined' && tasks.length !== 0) {
+        const ids = Object.keys(tasks);
+        let tasksArr: Task[] = Object.values(tasks);
+        // console.log(tasksArr);
+        if (isPlatformBrowser(this.platformId)) {
+            ids.forEach((id, i) => {
+                    tasksArr[i].dbId = id;
+                });
+                this.tasks = tasksArr;
+                this.saveInStorage();
+            // if (JSON.stringify(tasksArr) === JSON.stringify(this.tasks)) {
+            //     ids.forEach((id, i) => {
+            //         tasksArr[i].dbId = id;
+            //     });
+            //     this.tasks = tasksArr;
+            //     this.saveInStorage();
+            // }
+        }
     }
-   }
+  }
 
    
   addTask(newTask: Task) {
     this.isFetching.set(true);
     newTask.id = uuidv4();
+    console.log(typeof(newTask.id));
     const subscription = this.httpClient.post('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks.json', newTask).subscribe({
       next: (responseData: any) => {
         console.log(responseData);
@@ -100,13 +103,19 @@ export class TaskListService {
   }
 
 
-//   searchTasks(userId: string) {
+//   searchTasks(TaskId: string) {
 //     return this.tasks.filter((task) => task.id === id);
 //   }
 
- toggleTaskComplete(taskId: number) {
+//   sortTasks(TaskId: string) {
+//     return this.tasks.filter((task) => task.id === id);
+//   }
+
+ toggleTaskComplete(taskId: string) {
     const currentTask = this.tasks.find((task) => task.id === taskId);
     if (typeof(currentTask) !== 'undefined') { 
+        console.log(typeof(taskId));
+        console.log(typeof(currentTask.id));
         currentTask.completed = !currentTask.completed; 
         this.saveInStorage();
 
@@ -126,12 +135,12 @@ export class TaskListService {
         }
   }
 
-  toggleEdit(taskId: number) {
+  toggleEdit(taskId: string) {
     const currentTask = this.tasks.find((task) => task.id === taskId);
     if (typeof(currentTask) !== 'undefined') { currentTask.editing = !currentTask.editing; }
   }
 
-  saveTask(taskId: number) {
+  saveTask(taskId: string) {
     const currentTask = this.tasks.find((task) => task.id === taskId);
     if (typeof(currentTask) !== 'undefined') { 
         currentTask.originalVals[0] = currentTask.title ;
@@ -154,7 +163,7 @@ export class TaskListService {
     }
   }
 
-  cancelEdit(taskId: number) {
+  cancelEdit(taskId: string) {
     const currentTask = this.tasks.find((task) => task.id === taskId);
     if (typeof(currentTask) !== 'undefined') { 
         currentTask.title  = currentTask.originalVals[0];
@@ -163,7 +172,7 @@ export class TaskListService {
     }
   }
 
-  deleteTask(taskId: number) {
+  deleteTask(taskId: string) {
     if (confirm('Are you sure you want to delete this task?')) {
        const currentTask = this.tasks.find((task) => task.id === taskId);
         if (typeof(currentTask) !== 'undefined') { 
