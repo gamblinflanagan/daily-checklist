@@ -143,6 +143,10 @@ export class TaskListService {
           this.offlineTasks.splice(0, this.offlineTasks.length);
           this.saveInStorage();
           this.isFetching.set(false);
+        } else {
+          this.tasks = tasks;
+          this.saveInStorage();
+          this.isFetching.set(false);
         }
       }
     }
