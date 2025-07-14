@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -9,13 +16,12 @@ import { heroUsers, heroTrash, heroPencil } from '@ng-icons/heroicons/outline';
 import type { Task } from '../form-component/taskform-component';
 import { TaskListService } from './tasklist-service';
 
-
 @Component({
   selector: 'task-list',
   imports: [CommonModule, FormsModule, MatCheckboxModule, NgIcon],
   viewProviders: [provideIcons({ heroUsers, heroTrash, heroPencil })],
   templateUrl: './tasklist-component.html',
-  styleUrl: './tasklist-component.css'
+  styleUrl: './tasklist-component.css',
 })
 export class TaskListComponent implements OnInit {
   // private originalTask: Partial<Task> = {};
@@ -25,7 +31,6 @@ export class TaskListComponent implements OnInit {
   ngOnInit(): void {
     this.taskListService.getTasksFromServer();
   }
-  
 
   get allTasks() {
     return this.taskListService.getAllTasks();

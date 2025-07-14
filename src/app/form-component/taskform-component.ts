@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output, inject, signal, DestroyRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  signal,
+  DestroyRef,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,13 +21,13 @@ export type Task = {
   method: any;
   originalVals: string[];
   title: string;
-}
+};
 
 @Component({
   selector: 'task-form',
   imports: [CommonModule, FormsModule],
   templateUrl: './taskform-component.html',
-  styleUrl: './taskform-component.css'
+  styleUrl: './taskform-component.css',
 })
 export class TaskFormComponent {
   private httpClient = inject(HttpClient);
@@ -39,10 +47,13 @@ export class TaskFormComponent {
         editing: false,
         id: '0',
         method: 'null',
-        originalVals: [this.newTaskTitle.trim(), this.newTaskDescription.trim()],
+        originalVals: [
+          this.newTaskTitle.trim(),
+          this.newTaskDescription.trim(),
+        ],
         title: this.newTaskTitle.trim(),
       };
-       this.taskListService.addTask(newTask);
+      this.taskListService.addTask(newTask);
       this.newTaskTitle = '';
       this.newTaskDescription = '';
     }

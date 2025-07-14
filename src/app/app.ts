@@ -6,9 +6,14 @@ import { TaskFormComponent } from './form-component/taskform-component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TaskListComponent, HeaderComponent, TaskFormComponent],
+  imports: [
+    RouterOutlet,
+    TaskListComponent,
+    HeaderComponent,
+    TaskFormComponent,
+  ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('daily-checklist');
