@@ -21,15 +21,25 @@ export class TaskListService {
   isFetching = signal(false);
   error = signal('');
 
-  private tasks: Task[] = [];
+  private tasks: Task[] = [
+    // {
+    //   completed: false,
+    //   dbId: '',
+    //   description: 'description',
+    //   editing: false,
+    //   id: '0',
+    //   method: 'null',
+    //   originalVals: ['title', 'description'],
+    //   title: 'title',
+    // },
+  ];
   private offlineTasks: Task[] = [];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    //const tasks: Task[] = [];//
+    const tasks: Task[] = []; //
     if (isPlatformBrowser(this.platformId)) {
       const tasks = localStorage.getItem('tasks'); // || [];
       const offlineTasks = localStorage.getItem('offlineTasks');
-
       if (tasks) {
         this.tasks = JSON.parse(tasks);
       }
@@ -44,6 +54,7 @@ export class TaskListService {
   }
 
   getTasksFromServer() {
+    console.log('got');
     this.isFetching.set(true);
     const subscription = this.httpClient
       .get(
@@ -143,11 +154,15 @@ export class TaskListService {
           this.offlineTasks.splice(0, this.offlineTasks.length);
           this.saveInStorage();
           this.isFetching.set(false);
-        } else {
-          this.tasks = tasks;
-          this.saveInStorage();
-          this.isFetching.set(false);
         }
+        // else {
+        //   console.log('we good');
+        //   let tasksArr: Task[] = Object.values(tasks);
+        //   console.log(tasksArr);
+        //   this.tasks = tasks;
+        //   this.saveInStorage();
+        //   this.isFetching.set(false);
+        // }
       }
     }
   }
@@ -313,7 +328,7 @@ export class TaskListService {
 
   private saveInStorage() {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    localStorage.setItem('offlineTasks', JSON.stringify(this.offlineTasks));
+    //localStorage.setItem('offlineTasks', JSON.stringify(this.offlineTasks));
   }
 
   //   getCompletedCount(): number {
