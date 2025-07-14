@@ -5,6 +5,7 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import type { Task } from '../form-component/taskform-component';
 
+
 @Injectable({ providedIn: 'root' })
 export class TaskListService { 
     private httpClient = inject(HttpClient);
@@ -12,16 +13,7 @@ export class TaskListService {
     isFetching = signal(false);
 
     private tasks: Task[] = []
-    //     {
-    //         id: '1',
-    //         title: '9pm stream',
-    //         description: 'make sure to watch stream at 9pm tonight',
-    //         completed: false,
-    //         editing: false,
-    //         originalVals: ['9pm stream', 'make sure to watch stream at 9pm tonight'],
-    //         dbId: ''
-    //     }
-    // ];
+    private offlineTasks: Task[] = []
 
     constructor(@Inject(PLATFORM_ID) private platformId: Object) {
         //const tasks: Task[] = [];//
@@ -57,16 +49,61 @@ export class TaskListService {
 
   setAllTasks(tasks: any) {
     if (typeof(tasks) !== 'undefined' && tasks.length !== 0) {
-        const ids = Object.keys(tasks);
         let tasksArr: Task[] = Object.values(tasks);
-        // console.log(tasksArr);
         if (isPlatformBrowser(this.platformId)) {
-            if (JSON.stringify(tasksArr) !== JSON.stringify(this.tasks)) {
-                // ids.forEach((id, i) => {
-                //     tasksArr[i].dbId = id;
-                // });
-                // this.tasks = tasksArr;
-                // this.saveInStorage();
+            if (JSON.stringify(tasksArr) !== JSON.stringify(this.tasks) && this.offlineTasks.length !== 0) {
+                this.isFetching.set(true);
+                this.offlineTasks.forEach(function(this: any, task) {
+                  console.log(task);
+                  if (task.method === 'POST') {
+                    //console.log('post');
+                    const subscription = this.httpClient.post('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks.json', task).subscribe({
+                      next: (responseData: any) => {
+                        console.log(responseData);
+                        task.dbId = responseData.name || '';
+                      },
+                      complete: () => {
+                        this.saveTask(task.id)
+                        //this.saveInStorage();
+                        this.isFetching.set(false);
+                      }
+                    });
+                    this.destroyRef.onDestroy(() => {
+                      subscription.unsubscribe();
+                    });
+                  }
+                  else if (task.method === 'PUT') {
+                    console.log('put');
+                    const subscription = this.httpClient.put('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+task.dbId+'.json', task).subscribe({
+                      next: (responseData: any) => {
+                          console.log(responseData);
+                      },
+                      complete: () => {
+                          this.isFetching.set(false);
+                      }
+                    });
+                    this.destroyRef.onDestroy(() => {
+                        subscription.unsubscribe();
+                    });
+                  }
+                  else if (task.method === 'DELETE') {
+                    console.log('delete');
+                    const subscription = this.httpClient.delete('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+task.dbId+'.json').subscribe({
+                      next: (responseData: any) => {
+                        console.log(responseData);
+                      },
+                      complete: () => {
+                        this.isFetching.set(false);
+                      }
+                    });
+                    this.destroyRef.onDestroy(() => {
+                        subscription.unsubscribe();
+                    });
+                  }
+                
+                });
+                this.offlineTasks.splice(0, this.offlineTasks.length);
+                this.isFetching.set(false);
             }
         }
     }
@@ -117,18 +154,17 @@ export class TaskListService {
 
         this.isFetching.set(true);
         const subscription = this.httpClient.put('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+currentTask.dbId+'.json', currentTask).subscribe({
-        next: (responseData: any) => {
-            console.log(responseData);
-        },
-        complete: () => {
-            this.isFetching.set(false);
-        }
+          next: (responseData: any) => {
+              console.log(responseData);
+          },
+          complete: () => {
+              this.isFetching.set(false);
+          }
         });
-
         this.destroyRef.onDestroy(() => {
             subscription.unsubscribe();
         });
-        }
+      }
   }
 
   toggleEdit(taskId: string) {
@@ -174,14 +210,13 @@ export class TaskListService {
         if (typeof(currentTask) !== 'undefined') { 
             this.isFetching.set(true);
             const subscription = this.httpClient.delete('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+currentTask.dbId+'.json').subscribe({
-            next: (responseData: any) => {
+              next: (responseData: any) => {
                 console.log(responseData);
-            },
-            complete: () => {
+              },
+              complete: () => {
                 this.isFetching.set(false);
-            }
+              }
             });
-
             this.destroyRef.onDestroy(() => {
                 subscription.unsubscribe();
             });

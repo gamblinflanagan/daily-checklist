@@ -10,6 +10,7 @@ export type Task = {
   description: string;
   editing: boolean;
   id: string;
+  method: any;
   originalVals: string[];
   title: string;
 }
@@ -37,6 +38,7 @@ export class TaskFormComponent {
         description: this.newTaskDescription.trim(),
         editing: false,
         id: '0',
+        method: 'null',
         originalVals: [this.newTaskTitle.trim(), this.newTaskDescription.trim()],
         title: this.newTaskTitle.trim(),
       };
