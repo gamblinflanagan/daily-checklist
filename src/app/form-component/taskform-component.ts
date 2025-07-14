@@ -5,13 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { TaskListService } from '../list/tasklist-service';
 
 export type Task = {
-  id: string;
-  title: string;
-  description: string;
   completed: boolean;
-  editing: boolean;
-  originalVals: string[];
   dbId: string;
+  description: string;
+  editing: boolean;
+  id: string;
+  originalVals: string[];
+  title: string;
 }
 
 @Component({
@@ -32,13 +32,13 @@ export class TaskFormComponent {
   onAdd() {
     if (this.newTaskTitle.trim()) {
       const newTask: Task = {
-        id: '0',
-        title: this.newTaskTitle.trim(),
-        description: this.newTaskDescription.trim(),
         completed: false,
+        dbId: '',
+        description: this.newTaskDescription.trim(),
         editing: false,
+        id: '0',
         originalVals: [this.newTaskTitle.trim(), this.newTaskDescription.trim()],
-        dbId: ''
+        title: this.newTaskTitle.trim(),
       };
        this.taskListService.addTask(newTask);
       this.newTaskTitle = '';

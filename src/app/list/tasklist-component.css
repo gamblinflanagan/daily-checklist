@@ -1,7 +1,6 @@
     .tasks-section {
       margin-bottom: 32px;
       background: #f8fafc;
-      padding: 32px;
       border-radius: 16px;
     }
 
@@ -41,17 +40,18 @@
       border-radius: 16px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       border: 1px solid #e2e8f0;
+      margin: auto;
+
     }
 
     .tasks-list {
-      display: flex;
       flex-direction: column;
       gap: 0;
     }
 
     .task-item {
       padding: 20px;
-      border: 1px solid #f1f5f9;
+      border: 1px solid #dedede;
       border-radius: 8px;
       grid-template-columns: 60px 1fr;
       gap: 16px;
@@ -67,16 +67,26 @@
       border-color: #e2e8f0;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
+    .form-group {
+      display: inline-flex;
+      gap: 10px;
+      
+    }
+    @media screen {
+      .form-group{
+        flex-direction: column;
+        width: inherit;
+      }
 
-      /* width: 18px;
-      height: 18px;
-      background: #f8fafc;
-      margin: 2px 0;
-      border-color: #f1f5f9;
-    } */
+    }
+    .form-label{
+      text-align: inherit;
+      min-width: 88px;
+    }
     .task-actions {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      flex-direction: row;
       gap: 6px;
       margin-top: 4px;
     }
@@ -184,23 +194,23 @@
       transition: all 0.2s;
       font-family: inherit;
       resize: vertical;
-    }
+       width: inherit;
 
+    }
+ .task-edit-textarea {
+      min-height: 60px;
+       width: inherit;
+    }
     .task-edit-input:focus, .task-edit-textarea:focus {
       outline: none;
       border-color: #4f46e5;
       box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
     }
 
-    .task-edit-textarea {
-      min-height: 60px;
-    }
-
     .edit-buttons {
       display: flex;
       gap: 8px;
     }
-
     .save-button {
       padding: 8px 16px;
       background: #4f46e5;
@@ -213,7 +223,8 @@
     }
 
     .save-button:hover {
-      background: #059669;
+      background: #4338ca;
+      font-weight: bold;
     }
 
     .cancel-button {
@@ -262,10 +273,6 @@
         padding: 16px;
       }
 
-      .tasks-section {
-        padding: 20px;
-      }
-
       .title {
         font-size: 2rem;
       }
@@ -274,10 +281,6 @@
         font-size: 1.75rem;
       }
 
-      .add-task-section,
-      .tasks-card {
-        padding: 24px;
-      }
 
       .section-header {
         flex-direction: column;

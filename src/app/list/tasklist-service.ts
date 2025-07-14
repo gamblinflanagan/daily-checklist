@@ -61,18 +61,13 @@ export class TaskListService {
         let tasksArr: Task[] = Object.values(tasks);
         // console.log(tasksArr);
         if (isPlatformBrowser(this.platformId)) {
-            ids.forEach((id, i) => {
-                    tasksArr[i].dbId = id;
-                });
-                this.tasks = tasksArr;
-                this.saveInStorage();
-            // if (JSON.stringify(tasksArr) === JSON.stringify(this.tasks)) {
-            //     ids.forEach((id, i) => {
-            //         tasksArr[i].dbId = id;
-            //     });
-            //     this.tasks = tasksArr;
-            //     this.saveInStorage();
-            // }
+            if (JSON.stringify(tasksArr) !== JSON.stringify(this.tasks)) {
+                // ids.forEach((id, i) => {
+                //     tasksArr[i].dbId = id;
+                // });
+                // this.tasks = tasksArr;
+                // this.saveInStorage();
+            }
         }
     }
   }
@@ -89,7 +84,8 @@ export class TaskListService {
       },
       complete: () => {
         this.tasks.push(newTask);
-        this.saveInStorage();
+        this.saveTask(newTask.id)
+        //this.saveInStorage();
         this.isFetching.set(false);
       }
     });
@@ -145,7 +141,7 @@ export class TaskListService {
     if (typeof(currentTask) !== 'undefined') { 
         currentTask.originalVals[0] = currentTask.title ;
         currentTask.originalVals[1] = currentTask.description ;
-        currentTask.editing = !currentTask.editing;
+        currentTask.editing = false;
         this.isFetching.set(true);
         const subscription = this.httpClient.put('https://daily-checklist-44f79-default-rtdb.firebaseio.com/tasks/'+currentTask.dbId+'.json', currentTask).subscribe({
         next: (responseData: any) => {

@@ -23,9 +23,9 @@
                     class="task-checkbox"
                     [id]="'task-' + task.id"
                   /> -->
-                  <mat-checkbox class="example-margin" [checked]="task.completed" (change)="toggleTaskComplete(task.id)"></mat-checkbox>
                   <div class="task-actions">
-                    <button 
+                    <mat-checkbox class="example-margin" [checked]="task.completed" (change)="toggleTaskComplete(task.id)"></mat-checkbox>
+                  <button 
                       *ngIf="!task.completed"
                       (click)="editTask(task.id)" 
                       class="action-button edit-button"
