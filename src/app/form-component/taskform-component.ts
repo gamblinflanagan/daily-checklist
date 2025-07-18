@@ -18,6 +18,7 @@ export type Task = {
   description: string;
   editing: boolean;
   id: string;
+  lastUpdated: Date;
   method: any;
   originalVals: string[];
   title: string;
@@ -30,9 +31,9 @@ export type Task = {
   styleUrl: './taskform-component.css',
 })
 export class TaskFormComponent {
-  private httpClient = inject(HttpClient);
+  // private httpClient = inject(HttpClient);
   private taskListService = inject(TaskListService);
-  private destroyRef = inject(DestroyRef);
+  // private destroyRef = inject(DestroyRef);
   isFetching = signal(false);
   newTaskTitle = '';
   newTaskDescription = '';
@@ -46,6 +47,7 @@ export class TaskFormComponent {
         description: this.newTaskDescription.trim(),
         editing: false,
         id: '0',
+        lastUpdated: new Date(),
         method: 'null',
         originalVals: [
           this.newTaskTitle.trim(),
